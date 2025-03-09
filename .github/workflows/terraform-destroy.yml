@@ -1,33 +1,30 @@
 name: Terraform Destroy
 
 on:
-  workflow_dispatch:
-    inputs:
-      confirm_destroy:
-        description: 'Confirm you want to destroy resources'
-        required: true
-        default: 'false'
+  workflow_dispatch:  # Manually trigger this workflow
 
 jobs:
   destroy:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repository code
+      # Checkout the repository code
       - name: Checkout repository
         uses: actions/checkout@v2
 
       # Set up Terraform
       - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: '1.6.6'
+          terraform_version: '1.6.6'  # Use your desired version
 
       # Initialize Terraform
       - name: Terraform Init
         run: terraform init
 
-      # Run Terraform Destroy only if the user confirms
+      # Add Debugging
+      - name: Check Terraform Version
+        run: terraform version
+
       - name: Terraform Destroy
-        if: ${{ github.event.inputs.confirm_destroy == 'true' }}
         run: terraform destroy -auto-approve
